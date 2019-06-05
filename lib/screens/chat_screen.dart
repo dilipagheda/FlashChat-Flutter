@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash_chat/components/MessageBubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String id = "CHAT_SCREEN";
@@ -8,6 +11,35 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseUser _currentUser;
+  Firestore _firestore = Firestore.instance;
+  String messageText;
+  TextEditingController messageTextController = TextEditingController();
+
+  void getCurrentUser() async {
+    this._currentUser = await _auth.currentUser();
+    print(_currentUser);
+  }
+
+  void getMessages() {
+    Stream<QuerySnapshot> snapshot =
+        _firestore.collection('messages').snapshots();
+
+    snapshot.listen((onData) {
+      List<DocumentSnapshot> docs = onData.documents;
+      for (DocumentSnapshot doc in docs) {
+        print(doc.data['text']);
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +50,9 @@ class _ChatScreenState extends State<ChatScreen> {
               icon: Icon(Icons.close),
               onPressed: () {
                 //Implement logout functionality
+                _auth.signOut();
+                Navigator.pop(context);
+                Navigator.pop(context);
               }),
         ],
         title: Text('⚡️Chat'),
@@ -28,6 +63,30 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _firestore.collection('messages').snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                  } else {
+                    List<DocumentSnapshot> docs = snapshot.data.documents;
+                    List<MessageBubble> textItems = List<MessageBubble>();
+                    for (DocumentSnapshot doc in docs) {
+                      textItems.add(MessageBubble(
+                        from: doc.data['from'],
+                        text: doc.data['text'],
+                      ));
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView(
+                        children: textItems,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -35,15 +94,25 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
-                      onChanged: (value) {
-                        //Do something with the user input.
-                      },
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                      controller: messageTextController,
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
                   FlatButton(
-                    onPressed: () {
+                    onPressed: () async {
                       //Implement send functionality.
+                      print(messageTextController.text);
+                      if (messageTextController.text.length > 0) {
+                        await _firestore.collection('messages').add({
+                          'text': messageTextController.text,
+                          'from': _currentUser.email
+                        });
+                        messageTextController.clear();
+                      }
                     },
                     child: Text(
                       'Send',
