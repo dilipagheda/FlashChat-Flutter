@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class MessageBubble extends StatelessWidget {
   final String from;
   final String text;
-  MessageBubble({this.from, this.text});
+  final bool fromMe;
+  MessageBubble({this.from, this.text, this.fromMe});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment:
+          fromMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           from,
@@ -18,8 +20,18 @@ class MessageBubble extends StatelessWidget {
           ),
         ),
         Material(
-          color: Colors.blueAccent,
-          borderRadius: BorderRadius.circular(30),
+          color: fromMe ? Colors.blueAccent : Colors.green.shade400,
+          borderRadius: fromMe
+              ? BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                  topRight: Radius.circular(0))
+              : BorderRadius.only(
+                  topLeft: Radius.circular(0),
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                  topRight: Radius.circular(15)),
           elevation: 5,
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),

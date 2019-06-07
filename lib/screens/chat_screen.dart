@@ -61,7 +61,6 @@ class _ChatScreenState extends State<ChatScreen> {
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
@@ -75,6 +74,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       textItems.add(MessageBubble(
                         from: doc.data['from'],
                         text: doc.data['text'],
+                        fromMe: _currentUser.email == doc.data['from'],
                       ));
                     }
                     return Padding(
