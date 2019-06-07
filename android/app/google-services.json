@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "846423631419",
+    "firebase_url": "https://flash-chat-71bef.firebaseio.com",
+    "project_id": "flash-chat-71bef",
+    "storage_bucket": "flash-chat-71bef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846423631419:android:fef63d1cedf64795",
+        "android_client_info": {
+          "package_name": "com.dilipagheda.FlashChat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846423631419-ffv4036to4l936pkuu9i5o77mkhm56up.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXfNtPKr2gKlACe3HnNyPaW8PVJizP-SU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "846423631419-ffv4036to4l936pkuu9i5o77mkhm56up.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "846423631419-ncfpro7a3g4qb0t0is0pqolcu1eeinlc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dilipagheda.FlashChat"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
